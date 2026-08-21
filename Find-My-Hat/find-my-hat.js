@@ -6,12 +6,29 @@ const fieldCharacter = '░';
 const pathCharacter = '*';
 
 class Field {
-  constructor(field) {
+  constructor(field, startRow = 0, startCol = 0) {
     this.field = field;
-    this.playerRow = 0;
-    this.playerCol = 0;
+    this.actorRow = startRow;
+    this.actorCol = startCol;
 
-    this.field[0][0] = pathCharacter;
+    this.field[this.actorRow][this.actorCol] = pathCharacter;
+  }
+
+
+  moveUp() {
+    this.actorRow -= 1;
+  }
+
+  moveDown() {
+    this.actorRow += 1;
+  }
+
+  moveLeft() {
+    this.actorCol -= 1;
+  }
+
+  moveRight() {
+    this.actorCol += 1;
   }
 
   print() {
@@ -23,22 +40,29 @@ class Field {
   static generateField(height, width, percentage = 0.2) {
     const field = new Array(height).fill(null).map(() => new Array(width).fill(fieldCharacter));
 
-    for (let td = 0; td < height; td++) {
-      for (let lr = 0; lr < width; lr++) {
-        if (Math.random() < percentage) {
-          field[td][lr] = hole;
-        }
-      }
-    }
+    const startRow = Math.floor(Math.random() * height);
+    const startCol = Math.floor(Math.random() * width);
 
     let hatRow, hatCol;
     do {
       hatRow = Math.floor(Math.random() * height);
       hatCol = Math.floor(Math.random() * width);
-    } while (hatRow === 0 && hatCol === 0);
+    } while (hatRow === startRow && hatCol === startCol);
 
     field[hatRow][hatCol] = hat;
-    return field;
+
+    for (let td = 0; td < height; td++) {
+      for (let lr = 0; lr < width; lr++) {
+        const isStartPos = (td === startRow && lr === startCol);
+        const isHatPos = (td === hatRow && lr === hatCol);
+
+        if (!isStartPos && !isHatPos && Math.random() < percentage) {
+          field[td][lr] = hole;
+        }
+      }
+    }
+
+    return { field, startRow, startCol };
   }
 
   playGame() {
@@ -54,29 +78,28 @@ class Field {
         break;
       }
 
-
-      if (direction === 'w') this.playerRow -= 1;
-      else if (direction === 's') this.playerRow += 1;
-      else if (direction === 'a') this.playerCol -= 1;
-      else if (direction === 'd') this.playerCol += 1;
+      // การเคลื่อนที่
+      if (direction === 'w') this.moveUp();
+      else if (direction === 's') this.moveDown();
+      else if (direction === 'a') this.moveLeft();
+      else if (direction === 'd') this.moveRight();
       else {
         console.log('Invalid input! Use w, a, s, or d.');
         continue;
       }
 
       if (
-        this.playerRow < 0 ||
-        this.playerRow >= this.field.length ||
-        this.playerCol < 0 ||
-        this.playerCol >= this.field[0].length
+        this.actorRow < 0 ||
+        this.actorRow >= this.field.length ||
+        this.actorCol < 0 ||
+        this.actorCol >= this.field[0].length
       ) {
         console.log('🚫 You went out of bounds! Game over.');
         playing = false;
         break;
       }
 
-
-      const currentTile = this.field[this.playerRow][this.playerCol];
+      const currentTile = this.field[this.actorRow][this.actorCol];
 
       if (currentTile === hole) {
         console.log('💀 You fell into a hole! Game over');
@@ -85,13 +108,12 @@ class Field {
         console.log('🎉 You found the hat! You win!');
         playing = false;
       } else {
-
-        this.field[this.playerRow][this.playerCol] = pathCharacter;
+        this.field[this.actorRow][this.actorCol] = pathCharacter;
       }
     }
   }
 }
 
-
-const myField = new Field(Field.generateField(10, 10, 0.1));
+const { field, startRow, startCol } = Field.generateField(10, 10, 0.1);
+const myField = new Field(field, startRow, startCol);
 myField.playGame();
