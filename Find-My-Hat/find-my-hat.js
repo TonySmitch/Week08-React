@@ -23,10 +23,10 @@ class Field {
   static generateField(height, width, percentage = 0.2) {
     const field = new Array(height).fill(null).map(() => new Array(width).fill(fieldCharacter));
 
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
+    for (let td = 0; td < height; td++) {
+      for (let lr = 0; lr < width; lr++) {
         if (Math.random() < percentage) {
-          field[y][x] = hole;
+          field[td][lr] = hole;
         }
       }
     }
@@ -92,6 +92,6 @@ class Field {
   }
 }
 
-// สร้างแมพขนาด 10x10 พร้อมอัตราส่วนหลุม 20% และเริ่มเล่น
-const myField = new Field(Field.generateField(10, 10, 0.2));
+
+const myField = new Field(Field.generateField(10, 10, 0.1));
 myField.playGame();
