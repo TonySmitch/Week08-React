@@ -70,7 +70,7 @@ class Field {
         this.playerCol < 0 ||
         this.playerCol >= this.field[0].length
       ) {
-        console.log('You quit or walked off the field.');
+        console.log('🚫 You went out of bounds! Game over.');
         playing = false;
         break;
       }
@@ -79,10 +79,10 @@ class Field {
       const currentTile = this.field[this.playerRow][this.playerCol];
 
       if (currentTile === hole) {
-        console.log('Sorry, you fell in a hole!');
+        console.log('💀 You fell into a hole! Game over');
         playing = false;
       } else if (currentTile === hat) {
-        console.log('You found your hat!');
+        console.log('🎉 You found the hat! You win!');
         playing = false;
       } else {
 
