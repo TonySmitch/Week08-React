@@ -1,0 +1,22 @@
+import Room from "./04_Room";
+
+export default function Chamber({ question, answer, handleAnswer, pokemon})  {
+  
+  return (
+    <div className="flex flex-col justify-center items-center pt-10 bg-yellow-400 w-[90%]">
+      <h1>Chamber</h1>
+      {/* Render Room here */}
+      <Room 
+        question={question}
+        answer={answer}
+        handleAnswer={handleAnswer}
+        pokemon={pokemon}
+        /*handleRescue={handleRescue}
+        rainbowEffect={rainbowEffect}
+        prisoner={prisoner}
+        showModal={showModal}
+        handleReset={handleReset}*/
+        />
+    </div>
+  );
+}
